@@ -115,6 +115,16 @@ namespace TwitchChatSharp
 
             int badMessagesReceived = 0;
 
+            Stream stream;
+            if (_secure)
+            {
+                stream = _sslstream;
+            }
+            else
+            {
+                stream = _networkstream;
+            }
+
             while (_client.Connected)
             {
                 if (_networkstream.DataAvailable)
@@ -123,14 +133,7 @@ namespace TwitchChatSharp
 
                     try
                     {
-                        if (_secure)
-                        {
-                            await _sslstream.ReadAsync(buffer, 0, buffer.Length);
-                        }
-                        else
-                        {
-                            await _networkstream.ReadAsync(buffer, 0, buffer.Length);
-                        }
+                        await stream.ReadAsync(buffer, 0, buffer.Length);
                     }
                     catch (ObjectDisposedException)
                     {
