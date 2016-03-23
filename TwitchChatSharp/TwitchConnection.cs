@@ -146,12 +146,6 @@ namespace TwitchChatSharp
                         _channels.Add(ircMsg.Channel);
                     }
                     break;
-                case IrcCommand.Part:
-                    if (ircMsg.User == _nick)
-                    {
-                        _channels.Remove(ircMsg.Channel);
-                    }
-                    break;
                 case IrcCommand.RPL_376:
                     _blockConnectMessages = false;
                     break;
@@ -179,6 +173,7 @@ namespace TwitchChatSharp
         public void PartChannel(string channel)
         {
             _joinQ.Enqueue("PART " + channel);
+            _channels.Remove(channel);
         }
 
         /// <summary>
