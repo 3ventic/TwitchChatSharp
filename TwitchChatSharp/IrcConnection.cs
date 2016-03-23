@@ -20,6 +20,7 @@ namespace TwitchChatSharp
         private ConcurrentQueue<string> _sendQ = new ConcurrentQueue<string>();
         private ConcurrentQueue<string> _prioritySendQ = new ConcurrentQueue<string>();
         private int _rateLimit;
+        private System.Timers.Timer _pinger;
 
         // Events
         internal delegate void Irc_Connected(object sender, IrcConnectedEventArgs e);
@@ -52,13 +53,13 @@ namespace TwitchChatSharp
 
         internal async Task ConnectAsync(string address, int port, bool secure)
         {
-            System.Timers.Timer pinger = new System.Timers.Timer();
-            pinger.Interval = 30000;
-            pinger.Elapsed += (object o, System.Timers.ElapsedEventArgs e) =>
+            _pinger = new System.Timers.Timer();
+            _pinger.Interval = 30000;
+            _pinger.Elapsed += (object o, System.Timers.ElapsedEventArgs e) =>
             {
                 EnqueueMessage("PING " + (DateTime.Now.Ticks / TimeSpan.TicksPerSecond), true);
             };
-            pinger.Start();
+            _pinger.Start();
 
             _secure = secure;
             _client = new TcpClient();
@@ -104,6 +105,8 @@ namespace TwitchChatSharp
 
         private void Disconnect()
         {
+            _pinger.Stop();
+            _pinger.Dispose();
             _client.Close();
             Disconnected();
         }
