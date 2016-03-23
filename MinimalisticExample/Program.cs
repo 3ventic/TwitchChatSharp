@@ -11,10 +11,10 @@ namespace MinimalisticExample
                 cluster: ChatEdgeCluster.Aws,
                 nick: "justinfan1",
                 oauth: "sad9di9wad", // no oauth: prefix
-                port: 6667,
+                port: 6697,
                 capRequests: new string[] { "twitch.tv/tags", "twitch.tv/commands" },
                 ratelimit: 1500,
-                secure: false
+                secure: true
                 );
 
             client.Connected += (object sender, IrcConnectedEventArgs e) =>

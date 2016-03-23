@@ -110,8 +110,11 @@ namespace TwitchChatSharp
             }
             Thread.Sleep(50);
             _blockConnectMessages = true;
-            System.Console.WriteLine("Disconnected!");
             await _client.ConnectAsync(_address, _port, _secure);
+            foreach (var channel in _channels)
+            {
+                _joinQ.Enqueue("JOIN " + channel);
+            }
         }
 
         private void _client_Connected(object sender, IrcConnectedEventArgs e)
