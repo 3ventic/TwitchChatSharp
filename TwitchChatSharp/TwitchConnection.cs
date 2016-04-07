@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace TwitchChatSharp 
+namespace TwitchChatSharp
 {
     public class TwitchConnection
     {
@@ -40,18 +40,11 @@ namespace TwitchChatSharp
             _pass = "oauth:" + oauth;
             _nick = nick;
             _caps = capRequests ?? new string[2] { "twitch.tv/tags", "twitch.tv/commands" };
-            _secure = cluster == ChatEdgeCluster.Aws ? secure : false;
+            _secure = secure;
 
-            if (port == -1)
+            if (port < 0)
             {
-                if (cluster == ChatEdgeCluster.Aws && secure)
-                {
-                    _port = 6697;
-                }
-                else
-                {
-                    _port = 6667;
-                }
+                _port = secure ? 6697 : 6667;
             }
             else
             {
@@ -193,7 +186,7 @@ namespace TwitchChatSharp
         /// <param name="message"></param>
         public void SendCommandSafeMessage(string channel, string message)
         {
-            if (message.StartsWith("/") && !message.StartsWith("/me ") || message.StartsWith(".")) 
+            if (message.StartsWith("/") && !message.StartsWith("/me ") || message.StartsWith("."))
             {
                 message = "\u200b" + message;
             }
@@ -227,17 +220,7 @@ namespace TwitchChatSharp
 
         private static string GetServerAddress(ChatEdgeCluster cluster)
         {
-            switch (cluster)
-            {
-                case ChatEdgeCluster.Event:
-                    return "event.tmi.twitch.tv";
-                case ChatEdgeCluster.Group:
-                    return "group.tmi.twitch.tv";
-                case ChatEdgeCluster.Main:
-                    return "main.tmi.twitch.tv";
-                default:
-                    return "irc.chat.twitch.tv";
-            }
+            return "irc.chat.twitch.tv";
         }
     }
 }
