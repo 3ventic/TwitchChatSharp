@@ -39,7 +39,7 @@ namespace TwitchChatSharp
         Reconnect,
         ServerChange,
 		UserNotice
-    }
+	}
 
     /// <summary>
     /// IRC PRIVMSG information
