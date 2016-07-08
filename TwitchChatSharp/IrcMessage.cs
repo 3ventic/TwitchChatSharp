@@ -38,7 +38,7 @@ namespace TwitchChatSharp
         RoomState,
         Reconnect,
         ServerChange,
-		UserNotice
+        UserNotice
 	}
 
     /// <summary>
@@ -348,9 +348,9 @@ namespace TwitchChatSharp
                 case "ROOMSTATE":
                     command = IrcCommand.RoomState;
                     break;
-				case "USERNOTICE":
-					command = IrcCommand.UserNotice;
-					break;
+                case "USERNOTICE":
+                    command = IrcCommand.UserNotice;
+                    break;
             }
 
             string parameters = raw.Substring(starts[(int) parserState.STATE_PARAM], lens[(int) parserState.STATE_PARAM]);
