@@ -37,8 +37,9 @@ namespace TwitchChatSharp
         Whisper,
         RoomState,
         Reconnect,
-        ServerChange
-    }
+        ServerChange,
+        UserNotice
+	}
 
     /// <summary>
     /// IRC PRIVMSG information
@@ -346,6 +347,9 @@ namespace TwitchChatSharp
                     break;
                 case "ROOMSTATE":
                     command = IrcCommand.RoomState;
+                    break;
+                case "USERNOTICE":
+                    command = IrcCommand.UserNotice;
                     break;
             }
 
