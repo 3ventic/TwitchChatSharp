@@ -4,4 +4,4 @@ Making Twitch chat a bit easier to use for .NET developers. See MinimalisticExam
 
 Available via NuGet `Install-Package TwitchChatSharp`.
 
-For support, you can join the [Discord Server](https://discord.gg/8NXaEyV)
+For support, you can join the [Discord Server](https://discord.me/twitch-api)
