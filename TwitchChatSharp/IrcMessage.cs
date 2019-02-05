@@ -270,8 +270,6 @@ namespace TwitchChatSharp
             }
             lens[(int)state] = raw.Length - starts[(int)state];
             string cmd = raw.Substring(starts[(int)parserState.STATE_COMMAND], lens[(int)parserState.STATE_COMMAND]);
-            //int zero = 0;
-            //int result = 100 / zero;
             IrcCommand command = IrcCommand.Unknown;
             switch (cmd)
             {
