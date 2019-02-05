@@ -3,14 +3,16 @@ using System.Text;
 
 namespace TwitchChatSharp
 {
-    public enum ChatEdgeCluster {
+    public enum ChatEdgeCluster
+    {
         Main,
         Event,
         Group,
         Aws
     }
 
-    public enum IrcCommand {
+    public enum IrcCommand
+    {
         Unknown,
         PrivMsg,
         Notice,
@@ -38,8 +40,10 @@ namespace TwitchChatSharp
         RoomState,
         Reconnect,
         ServerChange,
-        UserNotice
-	}
+        UserNotice,
+        Mode,
+        ClearMsg
+    }
 
     /// <summary>
     /// IRC PRIVMSG information
@@ -207,11 +211,11 @@ namespace TwitchChatSharp
             int[] lens = new int[] { 0, 0, 0, 0, 0, 0 };
             for (int i = 0; i < raw.Length; ++i)
             {
-                lens[(int) state] = i - starts[(int) state] - 1;
+                lens[(int)state] = i - starts[(int)state] - 1;
                 if (state == parserState.STATE_NONE && raw[i] == '@')
                 {
                     state = parserState.STATE_V3;
-                    starts[(int) state] = ++i;
+                    starts[(int)state] = ++i;
 
                     int start = i;
                     string key = null;
@@ -243,30 +247,31 @@ namespace TwitchChatSharp
                 else if (state < parserState.STATE_PREFIX && raw[i] == ':')
                 {
                     state = parserState.STATE_PREFIX;
-                    starts[(int) state] = ++i;
+                    starts[(int)state] = ++i;
                 }
                 else if (state < parserState.STATE_COMMAND)
                 {
                     state = parserState.STATE_COMMAND;
-                    starts[(int) state] = i;
+                    starts[(int)state] = i;
                 }
                 else if (state < parserState.STATE_TRAILING && raw[i] == ':')
                 {
                     state = parserState.STATE_TRAILING;
-                    starts[(int) state] = ++i;
+                    starts[(int)state] = ++i;
                     break;
                 }
                 else if (state == parserState.STATE_COMMAND)
                 {
                     state = parserState.STATE_PARAM;
-                    starts[(int) state] = i;
+                    starts[(int)state] = i;
                 }
                 while (i < raw.Length && raw[i] != ' ')
                     ++i;
             }
-            lens[(int) state] = raw.Length - starts[(int) state];
-            string cmd = raw.Substring(starts[(int) parserState.STATE_COMMAND], lens[(int) parserState.STATE_COMMAND]);
-
+            lens[(int)state] = raw.Length - starts[(int)state];
+            string cmd = raw.Substring(starts[(int)parserState.STATE_COMMAND], lens[(int)parserState.STATE_COMMAND]);
+            //int zero = 0;
+            //int result = 100 / zero;
             IrcCommand command = IrcCommand.Unknown;
             switch (cmd)
             {
@@ -351,11 +356,20 @@ namespace TwitchChatSharp
                 case "USERNOTICE":
                     command = IrcCommand.UserNotice;
                     break;
+                case "MODE":
+                    command = IrcCommand.Mode;
+                    break;
+                case "CLEARMSG":
+                    command = IrcCommand.ClearMsg;
+                    break;
+                default:
+                    command = IrcCommand.Unknown;
+                    break;
             }
 
-            string parameters = raw.Substring(starts[(int) parserState.STATE_PARAM], lens[(int) parserState.STATE_PARAM]);
-            string message = raw.Substring(starts[(int) parserState.STATE_TRAILING], lens[(int) parserState.STATE_TRAILING]);
-            string hostmask = raw.Substring(starts[(int) parserState.STATE_PREFIX], lens[(int) parserState.STATE_PREFIX]);
+            string parameters = raw.Substring(starts[(int)parserState.STATE_PARAM], lens[(int)parserState.STATE_PARAM]);
+            string message = raw.Substring(starts[(int)parserState.STATE_TRAILING], lens[(int)parserState.STATE_TRAILING]);
+            string hostmask = raw.Substring(starts[(int)parserState.STATE_PREFIX], lens[(int)parserState.STATE_PREFIX]);
             return new IrcMessage(command, new string[] { parameters, message }, hostmask, tagDict);
         }
     }

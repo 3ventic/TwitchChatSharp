@@ -50,7 +50,7 @@ namespace TwitchChatSharp
         {
             _rateLimit = rateLimit;
         }
-
+        
         internal async Task ConnectAsync(string address, int port, bool secure)
         {
             _pinger = new System.Timers.Timer();

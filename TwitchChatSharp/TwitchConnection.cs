@@ -156,7 +156,7 @@ namespace TwitchChatSharp
         /// <param name="channel">#channel</param>
         public void JoinChannel(string channel)
         {
-            _joinQ.Enqueue("JOIN " + channel);
+            _joinQ.Enqueue("JOIN #" + channel);
         }
 
         /// <summary>
@@ -165,7 +165,7 @@ namespace TwitchChatSharp
         /// <param name="channel">#channel</param>
         public void PartChannel(string channel)
         {
-            _joinQ.Enqueue("PART " + channel);
+            _joinQ.Enqueue("PART #" + channel);
             _channels.Remove(channel);
         }
 
